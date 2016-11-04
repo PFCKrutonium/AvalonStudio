@@ -103,24 +103,24 @@
 
         private void OpenIntellisense(char currentChar, int caretIndex)
         {
-            Dispatcher.UIThread.InvokeTaskAsync(() =>
+            if (caretIndex > 1)
             {
-                if (caretIndex > 1)
+                if (IsLanguageSpecificTriggerChar(currentChar))
                 {
-                    if (IsLanguageSpecificTriggerChar(currentChar))
-                    {
-                        intellisenseStartedAt = caretIndex;
-                    }
-                    else
-                    {
-                        intellisenseStartedAt = TextUtilities.GetNextCaretPosition(editor.TextDocument, caretIndex, TextUtilities.LogicalDirection.Backward, TextUtilities.CaretPositioningMode.WordStart);
-                    }
+                    intellisenseStartedAt = caretIndex;
                 }
                 else
                 {
-                    intellisenseStartedAt = 1;
+                    Dispatcher.UIThread.InvokeTaskAsync(() =>
+                    {
+                        intellisenseStartedAt = TextUtilities.GetNextCaretPosition(editor.TextDocument, caretIndex, TextUtilities.LogicalDirection.Backward, TextUtilities.CaretPositioningMode.WordStart);
+                    }).Wait();
                 }
-            }).Wait();
+            }
+            else
+            {
+                intellisenseStartedAt = 1;
+            }
 
             UpdateFilter(caretIndex);
         }
@@ -130,11 +130,8 @@
             intellisenseStartedAt = editor.CaretIndex;
             currentFilter = string.Empty;
 
-            Dispatcher.UIThread.InvokeTaskAsync(() =>
-            {
-                intellisenseControl.SelectedCompletion = noSelectedCompletion;
-                intellisenseControl.IsVisible = false;
-            }).Wait();
+            intellisenseControl.SelectedCompletion = noSelectedCompletion;
+            intellisenseControl.IsVisible = false;
         }
 
         private void UpdateFilter(int caretIndex)
@@ -189,12 +186,9 @@
                 {
                     var list = filteredResults.ToList();
 
-                    Dispatcher.UIThread.InvokeTaskAsync(() =>
-                    {
-                        intellisenseControl.CompletionData = list;
-                    }).Wait();
+                    intellisenseControl.CompletionData = list;
 
-                    Dispatcher.UIThread.InvokeTaskAsync(() => intellisenseControl.IsVisible = true).Wait();
+                    intellisenseControl.IsVisible = true;
 
                     Dispatcher.UIThread.InvokeTaskAsync(() =>
                     {
@@ -369,18 +363,12 @@
 
                         if (signatureHelp != null)
                         {
-                            Dispatcher.UIThread.InvokeTaskAsync(() =>
-                            {
-                                completionAssistant.PushMethod(signatureHelp);
-                            }).Wait();
+                            completionAssistant.PushMethod(signatureHelp);                            
                         }
                     }
                     else if (currentChar == ')')
                     {
-                        Dispatcher.UIThread.InvokeTaskAsync(() =>
-                        {
-                            completionAssistant.PopMethod();
-                        }).Wait();
+                        completionAssistant.PopMethod();                        
                     }
 
                     if (IsCompletionChar(currentChar))
@@ -498,9 +486,8 @@
                 if (completionAssistant.IsVisible)
                 {
                     intellisenseJobRunner.InvokeAsync(() =>
-                    {
-                        Dispatcher.UIThread.InvokeAsync(() =>
-                        completionAssistant.Close());
+                    {                        
+                        completionAssistant.Close();
                     });
                 }
                 else if (intellisenseControl.IsVisible)
@@ -514,7 +501,7 @@
 
             if (!intellisenseControl.IsVisible)
             {
-                //SetCursor(caretIndex, line, column, EditorModel.UnsavedFiles);                
+                SetCursor(caretIndex, line, column, EditorModel.UnsavedFiles);                
             }
         }
 
