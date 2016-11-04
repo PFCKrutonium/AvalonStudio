@@ -18,7 +18,7 @@ namespace AvalonStudio.Debugging
 
 		public WatchListViewModel()
 		{
-			Dispatcher.UIThread.InvokeAsync(() => { IsVisible = false; });
+            IsVisible = false;
 
 			Title = "Watch List";
 			Children = new ObservableCollection<WatchViewModel>();
@@ -91,7 +91,7 @@ namespace AvalonStudio.Debugging
 		{
 			if (watch != null)
 			{
-				Dispatcher.UIThread.InvokeAsync(() => { Children.Remove(watch); });
+                Children.Remove(watch);
 
 				await _debugManager.CurrentDebugger.DeleteWatchAsync(watch.Model.Id);
 			}
@@ -108,7 +108,7 @@ namespace AvalonStudio.Debugging
 
 			await newWatch.Evaluate(_debugManager.CurrentDebugger);
 
-			Dispatcher.UIThread.InvokeAsync(() => { Children.Add(newWatch); });
+            Children.Add(newWatch);
 
 			//InvalidateColumnWidths();
 		}
@@ -133,7 +133,7 @@ namespace AvalonStudio.Debugging
 		{
 			foreach (var watch in LastChangedRegisters)
 			{
-				await Dispatcher.UIThread.InvokeTaskAsync(() => { watch.HasChanged = false; });
+                watch.HasChanged = false;
 			}
 
 			LastChangedRegisters.Clear();

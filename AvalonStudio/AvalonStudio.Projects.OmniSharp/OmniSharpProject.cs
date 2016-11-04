@@ -35,7 +35,7 @@ namespace AvalonStudio.Projects.OmniSharp
             return result;
         }
 
-        public OmniSharpProject() : base(true)
+        public OmniSharpProject()
         {
             ExcludedFiles = new List<string>();
             Items = new ObservableCollection<IProjectItem>();            

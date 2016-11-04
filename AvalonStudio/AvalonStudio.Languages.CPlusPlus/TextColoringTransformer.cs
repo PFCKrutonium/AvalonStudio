@@ -81,11 +81,8 @@ namespace AvalonStudio.Languages.CPlusPlus.Rendering
 
 				TextTransformations = transformations;
 
-				if (DataChanged != null)
-				{
-					DataChanged(this, new EventArgs());
-				}
-			});
+                DataChanged?.Invoke(this, new EventArgs());
+            });
 		}
         
 		public void UpdateOffsets(DocumentChangeEventArgs e)

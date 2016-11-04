@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Dynamic;
-using System.IO;
-using System.Linq;
 using AvalonStudio.Debugging;
 using AvalonStudio.Extensibility;
 using AvalonStudio.Extensibility.Menus;
@@ -15,16 +9,18 @@ using AvalonStudio.Toolchains;
 using AvalonStudio.Utils;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using AvalonStudio.Extensibility.Threading;
-using System.Threading.Tasks;
-using Avalonia.Threading;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Dynamic;
+using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using AvalonStudio.Projects.Raw;
 
 [assembly: InternalsVisibleTo("AvalonStudio.Projects.CPlusPlus.UnitTests")]
 
 namespace AvalonStudio.Projects.CPlusPlus
-{    
+{
     public class CPlusPlusProject : FileSystemProject, IStandardProject
     {
 
@@ -34,16 +30,11 @@ namespace AvalonStudio.Projects.CPlusPlus
             new Dictionary<string, Tuple<string, string>>();
 
         [JsonConstructor]
-        public CPlusPlusProject(List<SourceFile> sourceFiles) : this()
+        public CPlusPlusProject(List<SourceFile> sourceFiles)
         {
         }
 
-        public CPlusPlusProject() : this(true)
-        {
-
-        }
-
-        public CPlusPlusProject(bool useDispatcher) : base (useDispatcher)
+        public CPlusPlusProject()
         {
             ExcludedFiles = new List<string>();
             Items = new ObservableCollection<IProjectItem>();

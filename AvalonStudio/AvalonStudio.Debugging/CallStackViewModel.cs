@@ -18,7 +18,7 @@ namespace AvalonStudio.Debugging
 		{
 			Title = "CallStack";
 
-			Dispatcher.UIThread.InvokeAsync(() => { IsVisible = false; });
+            IsVisible = false;
 
 			Frames = new ObservableCollection<FrameViewModel>();
 		}
@@ -88,7 +88,7 @@ namespace AvalonStudio.Debugging
 		{
 			var updates = await _debugManager.CurrentDebugger.ListStackFramesAsync();
 
-			Dispatcher.UIThread.InvokeAsync(() => { Update(updates); });
+            Update(updates);
 		}
 	}
 }

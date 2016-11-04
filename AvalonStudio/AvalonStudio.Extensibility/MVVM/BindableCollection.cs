@@ -35,22 +35,21 @@ namespace AvalonStudio.Extensibility.MVVM
 		/// <param name="propertyName">Name of the property.</param>
 		public virtual void NotifyOfPropertyChange(string propertyName)
 		{
-			if (IsNotifying)
-				Dispatcher.UIThread.InvokeAsync(() => OnPropertyChanged(new PropertyChangedEventArgs(propertyName)));
+            if (IsNotifying)
+            {
+                OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+            }
 		}
 
-		/// <summary>
-		///     Raises a change notification indicating that all bindings should be refreshed.
-		/// </summary>
-		public void Refresh()
-		{
-			Dispatcher.UIThread.InvokeAsync(() =>
-			{
-				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-			});
-		}
+        /// <summary>
+        ///     Raises a change notification indicating that all bindings should be refreshed.
+        /// </summary>
+        public void Refresh()
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
 
 		/// <summary>
 		///     Inserts the item to the specified position.
@@ -59,7 +58,7 @@ namespace AvalonStudio.Extensibility.MVVM
 		/// <param name="item">The item to be inserted.</param>
 		protected sealed override void InsertItem(int index, T item)
 		{
-			Dispatcher.UIThread.InvokeAsync(() => InsertItemBase(index, item));
+            InsertItemBase(index, item);
 		}
 
 		/// <summary>
@@ -82,7 +81,7 @@ namespace AvalonStudio.Extensibility.MVVM
 		/// <param name="item">The item to set.</param>
 		protected sealed override void SetItem(int index, T item)
 		{
-			Dispatcher.UIThread.InvokeAsync(() => SetItemBase(index, item));
+            SetItemBase(index, item);
 		}
 
 		/// <summary>
@@ -104,7 +103,7 @@ namespace AvalonStudio.Extensibility.MVVM
 		/// <param name="index">The position used to identify the item to remove.</param>
 		protected sealed override void RemoveItem(int index)
 		{
-			Dispatcher.UIThread.InvokeAsync(() => RemoveItemBase(index));
+            RemoveItemBase(index);
 		}
 
 		/// <summary>
@@ -124,7 +123,7 @@ namespace AvalonStudio.Extensibility.MVVM
 		/// </summary>
 		protected sealed override void ClearItems()
 		{
-			Dispatcher.UIThread.InvokeAsync(ClearItemsBase);
+            ClearItemsBase();
 		}
 
 		/// <summary>
@@ -163,50 +162,45 @@ namespace AvalonStudio.Extensibility.MVVM
 			}
 		}
 
-		/// <summary>
-		///     Adds the range.
-		/// </summary>
-		/// <param name="items">The items.</param>
-		public virtual void AddRange(IEnumerable<T> items)
-		{
-			Dispatcher.UIThread.InvokeAsync(() =>
-			{
-				var previousNotificationSetting = IsNotifying;
-				IsNotifying = false;
-				var index = Count;
-				foreach (var item in items)
-				{
-					InsertItemBase(index, item);
-					index++;
-				}
-				IsNotifying = previousNotificationSetting;
+        /// <summary>
+        ///     Adds the range.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        public virtual void AddRange(IEnumerable<T> items)
+        {
+            var previousNotificationSetting = IsNotifying;
+            IsNotifying = false;
+            var index = Count;
+            foreach (var item in items)
+            {
+                InsertItemBase(index, item);
+                index++;
+            }
 
-				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-			});
-		}
+            IsNotifying = previousNotificationSetting;
 
-		/// <summary>
-		///     Removes the range.
-		/// </summary>
-		/// <param name="items">The items.</param>
-		public virtual void RemoveRange(IEnumerable<T> items)
-		{
-			Dispatcher.UIThread.InvokeAsync(() =>
-			{
-				var previousNotificationSetting = IsNotifying;
-				IsNotifying = false;
-				foreach (var index in items.Select(IndexOf).Where(index => index >= 0))
-				{
-					RemoveItemBase(index);
-				}
-				IsNotifying = previousNotificationSetting;
+            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
 
-				OnPropertyChanged(new PropertyChangedEventArgs("Count"));
-				OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
-				OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
-			});
-		}
+        /// <summary>
+        ///     Removes the range.
+        /// </summary>
+        /// <param name="items">The items.</param>
+        public virtual void RemoveRange(IEnumerable<T> items)
+        {
+            var previousNotificationSetting = IsNotifying;
+            IsNotifying = false;
+            foreach (var index in items.Select(IndexOf).Where(index => index >= 0))
+            {
+                RemoveItemBase(index);
+            }
+            IsNotifying = previousNotificationSetting;
+
+            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+            OnPropertyChanged(new PropertyChangedEventArgs("Item[]"));
+            OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+        }
 	}
 }

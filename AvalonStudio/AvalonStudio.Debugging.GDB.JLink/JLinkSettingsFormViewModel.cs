@@ -73,10 +73,7 @@ namespace AvalonStudio.Debugging.GDB.JLink
 
             var selectedDevice = list.FirstOrDefault((d) => d.Device == settings.DeviceKey);
 
-            await Dispatcher.UIThread.InvokeTaskAsync(() =>
-            {
-                SelectedDevice = selectedDevice;
-            });
+            SelectedDevice = selectedDevice;
 
             hasLoaded = true;
         }
@@ -164,17 +161,11 @@ namespace AvalonStudio.Debugging.GDB.JLink
                     newList = new ObservableCollection<JLinkTargetDeviceViewModel>(unfilteredList.Where((d) => d.Manufacturer.ToLower().Contains(filter.ToLower()) || d.Core.ToLower().Contains(filter.ToLower()) || d.Device.ToLower().Contains(filter.ToLower())));
                 });
 
-                await Dispatcher.UIThread.InvokeTaskAsync(() =>
-                {
-                    DeviceList = newList;
-                });
+                DeviceList = newList;                
             }
             else
             {
-                await Dispatcher.UIThread.InvokeTaskAsync(() =>
-                {
-                    DeviceList = unfilteredList;
-                });
+                DeviceList = unfilteredList;                
             }
 
             await Dispatcher.UIThread.InvokeTaskAsync(() =>

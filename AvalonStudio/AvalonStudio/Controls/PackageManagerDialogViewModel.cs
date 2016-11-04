@@ -155,7 +155,7 @@ namespace AvalonStudio.Controls
 
 		public void OverWrite(string data)
 		{
-			Dispatcher.UIThread.InvokeAsync(() => { Status = data; });
+            Status = data;
 		}
 
 		public void Write(string data)

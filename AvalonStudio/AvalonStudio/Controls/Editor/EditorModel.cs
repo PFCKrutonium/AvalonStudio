@@ -230,7 +230,7 @@ namespace AvalonStudio.Controls
 					// TODO allow interruption.
 					var result = await LanguageService.RunCodeAnalysisAsync(ProjectFile, UnsavedFiles, () => false);
 
-					Dispatcher.UIThread.InvokeAsync(() => { CodeAnalysisResults = result; });
+                    CodeAnalysisResults = result;
 				}
 			});
 		}

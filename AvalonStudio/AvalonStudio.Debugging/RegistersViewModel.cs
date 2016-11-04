@@ -21,7 +21,7 @@ namespace AvalonStudio.Debugging
 
 		public RegistersViewModel() : base(new ObservableCollection<RegisterViewModel>())
 		{
-			Dispatcher.UIThread.InvokeAsync(() => { IsVisible = false; });
+            IsVisible = false;
 
 			Title = "Registers";
 			lastChangedRegisters = new List<RegisterViewModel>();
@@ -91,7 +91,7 @@ namespace AvalonStudio.Debugging
 
 				changedRegisters = await _debugManager.CurrentDebugger.GetChangedRegistersAsync();
 
-				Dispatcher.UIThread.InvokeAsync(() => { UpdateRegisters(changedRegisters); });
+                UpdateRegisters(changedRegisters);
 			}
 		}
 
@@ -128,7 +128,7 @@ namespace AvalonStudio.Debugging
 
 		private void RegistersViewModel_DebugFrameChanged(object sender, FrameChangedEventArgs e)
 		{
-			Dispatcher.UIThread.InvokeAsync(() => { Invalidate(); });
+            Invalidate();
 		}
 	}
 }

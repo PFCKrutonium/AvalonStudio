@@ -81,7 +81,7 @@ namespace AvalonStudio.Debugging
 
 				if (liveBreakPoint != null)
 				{
-					await Dispatcher.UIThread.InvokeTaskAsync(() => { base.Add(liveBreakPoint); });
+                    base.Add(liveBreakPoint);
 				}
 			}
 			else
@@ -91,7 +91,7 @@ namespace AvalonStudio.Debugging
 					throw new Exception("Cant be null");
 				}
 
-				await Dispatcher.UIThread.InvokeTaskAsync(() => { base.Add(item); });
+                base.Add(item);
 			}
 		}
 

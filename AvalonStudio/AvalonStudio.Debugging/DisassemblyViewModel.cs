@@ -88,7 +88,7 @@ namespace AvalonStudio.Debugging
 
 		public DisassemblyViewModel()
 		{
-			Dispatcher.UIThread.InvokeAsync(() => { IsVisible = false; });
+            IsVisible = false;
 
 			Title = "Disassembly";
 			dataProvider = new DisassemblyDataProvider();
@@ -141,7 +141,7 @@ namespace AvalonStudio.Debugging
 
 		private void _debugManager_DebugFrameChanged(object sender, FrameChangedEventArgs e)
 		{
-			Dispatcher.UIThread.InvokeAsync(() => { SetAddress(e.Address); });
+            SetAddress(e.Address);
 		}
 
 		public void SetDebugger(IDebugger debugger)
@@ -165,11 +165,11 @@ namespace AvalonStudio.Debugging
 		{
 			if (_debugger.State == DebuggerState.Paused)
 			{
-                Dispatcher.UIThread.InvokeTaskAsync(()=>  Enabled = true);
+                Enabled = true;
 			}
 			else
 			{
-                Dispatcher.UIThread.InvokeTaskAsync(() => Enabled = false);
+                Enabled = false;
             }
 		}
 
@@ -184,10 +184,7 @@ namespace AvalonStudio.Debugging
                 {
                     await Task.Delay(50);
 
-                    Dispatcher.UIThread.InvokeAsync(() =>
-                    {
-                        SelectedIndex = currentAddress;
-                    });
+                    SelectedIndex = currentAddress;                   
                 });
             }
             else

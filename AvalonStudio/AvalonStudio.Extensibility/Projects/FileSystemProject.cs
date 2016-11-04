@@ -20,9 +20,8 @@ namespace AvalonStudio.Projects
     {
         private FileSystemWatcher fileSystemWatcher;
         private FileSystemWatcher folderSystemWatcher;
-        private Dispatcher uiDispatcher;
 
-        public FileSystemProject(bool useDispatcher)
+        public FileSystemProject()
         {   
             Folders = new ObservableCollection<IProjectFolder>();            
             
@@ -30,11 +29,6 @@ namespace AvalonStudio.Projects
             ToolchainSettings = new ExpandoObject();
             DebugSettings = new ExpandoObject();
             Project = this;
-
-            if (useDispatcher)
-            {
-                uiDispatcher = Dispatcher.UIThread;
-            }
         }
 
         public static void PopulateFiles(FileSystemProject project, IProjectFolder folder)
@@ -120,62 +114,41 @@ namespace AvalonStudio.Projects
 
         private void FileSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
         {
-            Invoke(() =>
-            {
-                RemoveFile(e.FullPath);
-            });
+            RemoveFile(e.FullPath);
         }
 
         private void FileSystemWatcher_Renamed(object sender, RenamedEventArgs e)
         {
-            Invoke(() =>
-            {
-                RemoveFile(e.OldFullPath);
+            RemoveFile(e.OldFullPath);
 
-                AddFile(e.FullPath);
-            });
+            AddFile(e.FullPath);
         }
 
         private void FileSystemWatcher_Created(object sender, FileSystemEventArgs e)
         {
-            Invoke(() =>
-            {
-                AddFile(e.FullPath);
-            });
+            AddFile(e.FullPath);
         }
 
         private void FileSystemWatcher_Changed(object sender, FileSystemEventArgs e)
         {
-            Invoke(() =>
-            {
-                FileChanged(e.FullPath);
-            });
+            FileChanged(e.FullPath);
         }
 
         private void FolderSystemWatcher_Deleted(object sender, FileSystemEventArgs e)
         {
-            Invoke(() =>
-            {
-                RemoveFolder(e.FullPath);
-            });
+            RemoveFolder(e.FullPath);
         }
 
         private void FolderSystemWatcher_Renamed(object sender, RenamedEventArgs e)
         {
-            Invoke(() =>
-            {
-                RemoveFolder(e.OldFullPath);
+            RemoveFolder(e.OldFullPath);
 
-                AddFolder(e.FullPath);
-            });
+            AddFolder(e.FullPath);
         }
 
         private void FolderSystemWatcher_Created(object sender, FileSystemEventArgs e)
         {
-            Invoke(() =>
-            {
-                AddFolder(e.FullPath);
-            });
+            AddFolder(e.FullPath);
         }
 
         public void RemoveFile(string fullPath)
@@ -296,21 +269,6 @@ namespace AvalonStudio.Projects
                 {
                     project.SourceFiles.Remove(item as ISourceFile);
                 }
-            }
-        }
-
-        void Invoke(Action action)
-        {
-            if (uiDispatcher != null)
-            {
-                uiDispatcher.InvokeTaskAsync(() =>
-                {
-                    action();
-                });
-            }
-            else
-            {
-                action();
             }
         }
 

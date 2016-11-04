@@ -16,7 +16,7 @@ namespace AvalonStudio.Debugging
 			Title = "Locals";
 			locals = new List<Variable>();
 
-			Dispatcher.UIThread.InvokeAsync(() => { IsVisible = false; });
+            IsVisible = false;
 		}
 
 		public override Location DefaultLocation

@@ -91,13 +91,13 @@
             {
                 dataProvider.Enable();
 
-                Dispatcher.UIThread.InvokeTaskAsync(() => Enabled = true);
+                Enabled = true;
             }
             else
             {
                 dataProvider?.Clear();
 
-                Dispatcher.UIThread.InvokeTaskAsync(() => Enabled = false);
+                Enabled = false;
             }
         }
 
@@ -141,17 +141,11 @@
         {
             if (MemoryData == null)
             {
-                Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    MemoryData = new AsyncVirtualizingCollection<MemoryBytesViewModel>(dataProvider, 15, 500);
-                });
+                MemoryData = new AsyncVirtualizingCollection<MemoryBytesViewModel>(dataProvider, 15, 500);                
             }
             else
             {
-                Dispatcher.UIThread.InvokeAsync(() =>
-                {
-                    MemoryData.CleanPagesAround((ulong)selectedIndex);
-                });
+                MemoryData.CleanPagesAround((ulong)selectedIndex);                
 
                 var pages = memoryData.Pages.ToList();
 
@@ -196,7 +190,7 @@
 
         private void _debugManager_DebugFrameChanged(object sender, FrameChangedEventArgs e)
         {
-            Dispatcher.UIThread.InvokeAsync(() => { Invalidate(); });
+            Invalidate();
         }
 
         private ulong currentAddress;
